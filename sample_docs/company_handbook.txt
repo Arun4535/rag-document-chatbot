@@ -1,0 +1,21 @@
+Acme AI Company Handbook
+
+Remote Work Policy
+
+Employees may work remotely up to three days per week. Remote work days should be coordinated with the employee's manager and team calendar. Employees must be reachable during core collaboration hours from 10:00 AM to 3:00 PM local time.
+
+Expense Policy
+
+Employees can request reimbursement for approved work-related expenses. Reimbursement requests must be submitted within 30 days of the purchase date. Each request must include the original receipt, a short business reason, and manager approval.
+
+Laptop Security Policy
+
+Company laptops must use full-disk encryption and automatic screen locking. Employees should lock their screen when stepping away from the device. Lost or stolen laptops must be reported to IT within 24 hours.
+
+Learning Budget
+
+Each employee receives an annual learning budget of 500 USD. The budget can be used for books, online courses, conferences, and certification exams related to the employee's role.
+
+Support Escalation Process
+
+Customer support issues are classified as low, medium, high, or critical priority. Critical issues must be acknowledged within 30 minutes and escalated to the on-call engineering lead.
