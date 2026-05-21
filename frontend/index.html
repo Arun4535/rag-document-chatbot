@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DocSense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <div class="brand"><span class="brand-icon">◈</span> DocSense</div>
+        <p>AI-powered document intelligence</p>
+      </div>
+      <a class="github-link" href="https://github.com/Arun4535/rag-document-chatbot" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+
+    <nav class="tabs" aria-label="Main sections">
+      <button class="tab active" data-tab="chat">Chat</button>
+      <button class="tab" data-tab="research">Research Agent</button>
+      <button class="tab" data-tab="evals">Evals Dashboard</button>
+    </nav>
+
+    <main>
+      <section id="chat" class="tab-panel active">
+        <div class="chat-layout">
+          <aside class="panel upload-panel">
+            <h2>Upload Document</h2>
+            <label id="dropzone" class="dropzone">
+              <input id="file-input" type="file" accept=".pdf,.txt" hidden />
+              <span class="upload-icon">◈</span>
+              <strong>Drop PDF or TXT here</strong>
+              <small>or click to choose a file</small>
+            </label>
+            <div id="selected-file" class="selected-file hidden"></div>
+            <div id="progress-wrap" class="progress-wrap hidden">
+              <div class="progress-label" id="progress-label">Chunking...</div>
+              <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+            </div>
+            <h3>Uploaded docs</h3>
+            <div id="docs-list" class="docs-list empty">No documents indexed yet.</div>
+          </aside>
+
+          <section class="panel chat-panel">
+            <div id="chat-messages" class="chat-messages">
+              <div class="empty-state">Upload a document to start asking questions</div>
+            </div>
+            <form id="chat-form" class="chat-input">
+              <textarea id="question-input" rows="1" placeholder="Ask about the indexed document..."></textarea>
+              <button type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section id="research" class="tab-panel">
+        <div class="panel research-panel">
+          <h2>Research Agent</h2>
+          <div class="research-controls">
+            <input id="topic-input" type="text" placeholder="Enter any research topic..." />
+            <button id="research-button">Start Research</button>
+          </div>
+          <div class="agent-stats">
+            <span>Total tool calls: <strong id="tool-count">0</strong></span>
+            <span>Time taken: <strong id="time-taken">0s</strong></span>
+          </div>
+          <div id="agent-log" class="agent-log"></div>
+          <article id="report" class="report hidden"></article>
+          <button id="download-report" class="secondary hidden">Download Report</button>
+        </div>
+      </section>
+
+      <section id="evals" class="tab-panel">
+        <div class="eval-grid">
+          <div class="stat-card"><span>Total Queries</span><strong id="stat-total">0</strong></div>
+          <div class="stat-card"><span>Avg Sources Retrieved</span><strong id="stat-avg">0</strong></div>
+          <div class="stat-card"><span>Positive Feedback %</span><strong id="stat-positive">0%</strong></div>
+        </div>
+        <div class="panel">
+          <h2>Queries per day</h2>
+          <div id="bar-chart" class="bar-chart"></div>
+        </div>
+        <div class="panel">
+          <h2>Recent queries</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Answer preview</th>
+                  <th>Sources</th>
+                  <th>Feedback</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="eval-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

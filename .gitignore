@@ -5,7 +5,5 @@ __pycache__/
 .pytest_tmp/
 .streamlit/
 *.log
-data/uploads/*
-data/vector_store/*
-!data/uploads/.gitkeep
-!data/vector_store/.gitkeep
+chroma_db/
+data/

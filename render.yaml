@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: docsense-backend
+    env: docker
+    rootDir: backend
+    plan: starter
+    healthCheckPath: /api/health
+    disk:
+      name: chroma-data
+      mountPath: /app/chroma_db
+      sizeGB: 1
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: CHROMA_PERSIST_DIR
+        value: /app/chroma_db
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: VOYAGE_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: docsense-db
+          property: connectionString
+
+  - type: web
+    name: docsense-frontend
+    env: docker
+    rootDir: frontend
+    plan: starter
+    envVars:
+      - key: BACKEND_UPSTREAM
+        fromService:
+          type: web
+          name: docsense-backend
+          property: url
+
+databases:
+  - name: docsense-db
+    databaseName: docsense
+    user: docsense
+    plan: starter

@@ -1,0 +1,14 @@
+anthropic>=0.49.0
+beautifulsoup4>=4.12.3
+chromadb>=0.6.3
+duckduckgo-search>=6.3.7
+fastapi>=0.115.0
+psycopg2-binary>=2.9.9
+pydantic-settings>=2.6.0
+PyPDF2>=3.0.1
+python-multipart>=0.0.12
+rank-bm25>=0.2.2
+requests>=2.32.3
+SQLAlchemy>=2.0.36
+uvicorn[standard]>=0.32.0
+voyageai>=0.3.2
