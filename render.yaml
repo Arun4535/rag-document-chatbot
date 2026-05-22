@@ -1,19 +1,20 @@
 services:
   - type: web
-    name: docsense-backend
-    env: docker
-    rootDir: backend
+    name: docsense
+    env: python
     plan: starter
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     disk:
       name: chroma-data
-      mountPath: /app/chroma_db
+      mountPath: /opt/render/project/src/backend/chroma_db
       sizeGB: 1
     envVars:
       - key: ENVIRONMENT
         value: production
       - key: CHROMA_PERSIST_DIR
-        value: /app/chroma_db
+        value: /opt/render/project/src/backend/chroma_db
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: VOYAGE_API_KEY
@@ -22,18 +23,6 @@ services:
         fromDatabase:
           name: docsense-db
           property: connectionString
-
-  - type: web
-    name: docsense-frontend
-    env: docker
-    rootDir: frontend
-    plan: starter
-    envVars:
-      - key: BACKEND_UPSTREAM
-        fromService:
-          type: web
-          name: docsense-backend
-          property: url
 
 databases:
   - name: docsense-db

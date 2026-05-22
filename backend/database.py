@@ -45,9 +45,16 @@ class Eval(Base):
 
 settings = get_settings()
 
-# QueuePool is used by default for PostgreSQL. pool_pre_ping avoids stale Render connections
-# after idle periods, which is common on managed database services.
-engine = create_engine(settings.database_url, pool_pre_ping=True, pool_size=5, max_overflow=10)
+engine_kwargs = {"pool_pre_ping": True}
+if settings.database_url.startswith("sqlite"):
+    # SQLite is the no-setup local path. Render injects PostgreSQL via DATABASE_URL.
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    # QueuePool is used by default for PostgreSQL. These values avoid stale Render
+    # connections after idle periods without opening too many database connections.
+    engine_kwargs.update({"pool_size": 5, "max_overflow": 10})
+
+engine = create_engine(settings.database_url, **engine_kwargs)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, expire_on_commit=False)
 
 

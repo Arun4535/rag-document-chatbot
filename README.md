@@ -1,9 +1,9 @@
 # DocSense + ResearchAgent
 
-[![Live Demo](https://img.shields.io/badge/live-demo-2D7DD2)](https://docsense-frontend.onrender.com)
+[![Live Demo](https://img.shields.io/badge/live-demo-2D7DD2)](https://docsense.onrender.com)
 [![GitHub](https://img.shields.io/badge/github-repo-white)](https://github.com/Arun4535/rag-document-chatbot)
 
-Production-style AI document Q&A and research assistant built with FastAPI, Claude, Voyage embeddings, ChromaDB, PostgreSQL, vanilla HTML/CSS/JS, and Docker.
+Production-style AI document Q&A and research assistant built with FastAPI, Claude, Voyage embeddings, ChromaDB, PostgreSQL, and vanilla HTML/CSS/JS.
 
 ## Screenshot
 
@@ -25,8 +25,7 @@ docs/screenshot.png
 - Claude answer generation with source citations
 - Research agent with Claude tool use, web search, page fetch, and report sections
 - Eval dashboard with query logs, source counts, and thumbs up/down feedback
-- Docker Compose for local deployment
-- Render Blueprint for cloud deployment
+- Native Render deployment with no Docker
 
 ## Architecture
 
@@ -34,10 +33,10 @@ docs/screenshot.png
 Browser
   |
   v
-Nginx Frontend
-  |
-  v
-FastAPI Backend
+FastAPI App
+  | serves
+  +-- Static HTML/CSS/JS frontend
+  +-- /api/* backend routes
   |
   +-------------------+-------------------+
   |                   |                   |
@@ -59,7 +58,7 @@ Voyage-3 Embeddings
 | Vector store | ChromaDB persistent storage |
 | Keyword search | BM25 via `rank-bm25` |
 | Database | PostgreSQL + SQLAlchemy |
-| Deployment | Docker Compose, Render Blueprint |
+| Deployment | Render Python Web Service |
 
 ## Local Setup
 
@@ -74,20 +73,23 @@ Edit `.env`:
 ```text
 ANTHROPIC_API_KEY=your_anthropic_key
 VOYAGE_API_KEY=your_voyage_key
-POSTGRES_PASSWORD=choose_a_password
 ```
 
 Run:
 
 ```bash
-docker compose up --build
+pip install -r backend/requirements.txt
+cd backend
+uvicorn main:app --reload
 ```
 
 Open:
 
 ```text
-http://localhost
+http://127.0.0.1:8000
 ```
+
+Local development uses SQLite by default. Render uses managed PostgreSQL via `DATABASE_URL`.
 
 ## API Endpoints
 

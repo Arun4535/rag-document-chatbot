@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     anthropic_api_key: str
     voyage_api_key: str
-    database_url: str
+    database_url: str = "sqlite:///./docsense.db"
     chroma_persist_dir: str = "./chroma_db"
     environment: str = "development"
     claude_model: str = "claude-sonnet-4-20250514"

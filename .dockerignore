@@ -1,9 +1,0 @@
-.git
-.venv
-.env
-.pytest_cache
-.pytest_tmp
-__pycache__
-*.pyc
-*.log
-chroma_db
