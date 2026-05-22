@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from database import Document, SessionLocal, get_db
 from models import IngestStatusResponse
 from services.chunker import RecursiveTextSplitter
-from services.embeddings import VoyageEmbeddings
+from services.embeddings import FastEmbedEmbeddings
 from services.vectorstore import ChromaStore
 
 
@@ -48,7 +48,7 @@ async def process_document(doc_id: str, filename: str, content: bytes) -> None:
     try:
         pages = await asyncio.to_thread(extract_pages, filename, content)
         chunks = RecursiveTextSplitter(chunk_size=500, overlap=50).split_pages(pages)
-        embeddings = await VoyageEmbeddings().embed_documents([chunk.text for chunk in chunks])
+        embeddings = await FastEmbedEmbeddings().embed_documents([chunk.text for chunk in chunks])
         await ChromaStore().add_chunks(doc_id, filename, chunks, embeddings)
 
         document = db.get(Document, doc_id)

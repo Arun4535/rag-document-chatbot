@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from database import Document, Eval, get_db
 from models import QueryRequest, QueryResponse, Source
-from services.embeddings import VoyageEmbeddings
+from services.embeddings import FastEmbedEmbeddings
 from services.generator import ClaudeGenerator
 from services.retrieval import HybridRetriever
 from services.vectorstore import ChromaStore
@@ -20,7 +20,7 @@ async def query_documents(payload: QueryRequest, db: Session = Depends(get_db)) 
     if document.status != "complete":
         raise HTTPException(status_code=409, detail=f"Document is not ready: {document.status}")
 
-    query_embedding = await VoyageEmbeddings().embed_query(payload.question)
+    query_embedding = await FastEmbedEmbeddings().embed_query(payload.question)
     chunks = await HybridRetriever(ChromaStore()).retrieve(payload.doc_id, payload.question, query_embedding)
     if not chunks:
         raise HTTPException(status_code=404, detail="No indexed chunks found for this document")

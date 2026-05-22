@@ -3,7 +3,7 @@
 [![Live Demo](https://img.shields.io/badge/live-demo-2D7DD2)](https://docsense.onrender.com)
 [![GitHub](https://img.shields.io/badge/github-repo-white)](https://github.com/Arun4535/rag-document-chatbot)
 
-Production-style AI document Q&A and research assistant built with FastAPI, Claude, Voyage embeddings, ChromaDB, PostgreSQL, and vanilla HTML/CSS/JS.
+Production-style AI document Q&A and research assistant built with FastAPI, Claude, FastEmbed local embeddings, ChromaDB, PostgreSQL, and vanilla HTML/CSS/JS.
 
 ## Screenshot
 
@@ -18,7 +18,7 @@ docs/screenshot.png
 - Upload PDF or TXT documents
 - Background ingestion with status polling
 - Recursive text chunking with source metadata
-- `voyage-3` embeddings through Voyage AI
+- Local embeddings through FastEmbed
 - Persistent ChromaDB vector storage
 - Hybrid retrieval: semantic search + BM25 keyword search
 - Reciprocal Rank Fusion for merged retrieval ranking
@@ -44,7 +44,7 @@ FastAPI App
 ChromaDB          PostgreSQL          Claude API
   ^
   |
-Voyage-3 Embeddings
+FastEmbed Local Embeddings
 ```
 
 ## Tech Stack
@@ -54,7 +54,7 @@ Voyage-3 Embeddings
 | Frontend | HTML, CSS, vanilla JavaScript |
 | API | FastAPI, Uvicorn |
 | LLM | Claude via Anthropic API |
-| Embeddings | Voyage AI `voyage-3` |
+| Embeddings | FastEmbed `BAAI/bge-small-en-v1.5` |
 | Vector store | ChromaDB persistent storage |
 | Keyword search | BM25 via `rank-bm25` |
 | Database | PostgreSQL + SQLAlchemy |
@@ -72,7 +72,6 @@ Edit `.env`:
 
 ```text
 ANTHROPIC_API_KEY=your_anthropic_key
-VOYAGE_API_KEY=your_voyage_key
 ```
 
 Run:
@@ -200,4 +199,4 @@ Claude receives tool definitions for web search, page retrieval, and saving repo
 
 ## Notes
 
-Voyage embeddings require a `VOYAGE_API_KEY`. Claude generation and agent tool use require an `ANTHROPIC_API_KEY`.
+FastEmbed runs embeddings locally. Claude generation and agent tool use require an `ANTHROPIC_API_KEY`.

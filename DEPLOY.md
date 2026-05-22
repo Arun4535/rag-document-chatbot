@@ -29,11 +29,10 @@ git push origin main
 
 ## 3. Set Environment Variables
 
-Set these on the `docsense` web service:
+Set this on the `docsense` web service:
 
 ```text
 ANTHROPIC_API_KEY=your_anthropic_key
-VOYAGE_API_KEY=your_voyage_key
 ```
 
 `DATABASE_URL` is injected automatically from Render PostgreSQL.
@@ -62,7 +61,7 @@ https://docsense.onrender.com
 
 ```bash
 cp .env.example .env
-# edit .env and add ANTHROPIC_API_KEY and VOYAGE_API_KEY
+# edit .env and add ANTHROPIC_API_KEY
 pip install -r backend/requirements.txt
 cd backend
 uvicorn main:app --reload
