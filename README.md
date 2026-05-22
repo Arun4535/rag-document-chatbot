@@ -1,6 +1,6 @@
 # DocSense + ResearchAgent
 
-[![Live Demo](https://img.shields.io/badge/live-demo-2D7DD2)](https://docsense.onrender.com)
+[![Deployment](https://img.shields.io/badge/live_demo-deploying-2D7DD2)](DEPLOY.md)
 [![GitHub](https://img.shields.io/badge/github-repo-white)](https://github.com/Arun4535/rag-document-chatbot)
 
 Production-style AI document Q&A and research assistant built with FastAPI, Claude, FastEmbed local embeddings, ChromaDB, PostgreSQL, and vanilla HTML/CSS/JS.
