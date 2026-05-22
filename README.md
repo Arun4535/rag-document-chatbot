@@ -72,6 +72,7 @@ Edit `.env`:
 
 ```text
 ANTHROPIC_API_KEY=your_anthropic_key
+MAX_UPLOAD_MB=10
 ```
 
 Run:

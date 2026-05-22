@@ -5,6 +5,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Up
 from PyPDF2 import PdfReader
 from sqlalchemy.orm import Session
 
+from config import get_settings
 from database import Document, SessionLocal, get_db
 from models import IngestStatusResponse
 from services.chunker import RecursiveTextSplitter
@@ -27,6 +28,13 @@ async def ingest_document(
         raise HTTPException(status_code=400, detail="Only PDF and TXT files are supported")
 
     content = await file.read()
+    max_upload_bytes = get_settings().max_upload_mb * 1024 * 1024
+    if len(content) > max_upload_bytes:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File is too large. Maximum upload size is {get_settings().max_upload_mb} MB.",
+        )
+
     document = Document(filename=file.filename, status="processing", chunk_count=0)
     db.add(document)
     db.commit()
@@ -48,6 +56,9 @@ async def process_document(doc_id: str, filename: str, content: bytes) -> None:
     try:
         pages = await asyncio.to_thread(extract_pages, filename, content)
         chunks = RecursiveTextSplitter(chunk_size=500, overlap=50).split_pages(pages)
+        if not chunks:
+            raise ValueError("No extractable text found in document")
+
         embeddings = await FastEmbedEmbeddings().embed_documents([chunk.text for chunk in chunks])
         await ChromaStore().add_chunks(doc_id, filename, chunks, embeddings)
 

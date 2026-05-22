@@ -1,6 +1,10 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class Settings(BaseSettings):
@@ -10,8 +14,9 @@ class Settings(BaseSettings):
     environment: str = "development"
     claude_model: str = "claude-sonnet-4-20250514"
     embedding_model: str = "BAAI/bge-small-en-v1.5"
+    max_upload_mb: int = 10
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_file=PROJECT_ROOT / ".env", extra="ignore")
 
 
 @lru_cache(maxsize=1)

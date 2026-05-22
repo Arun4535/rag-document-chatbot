@@ -1,6 +1,9 @@
 import asyncio
+import ipaddress
 import json
+import socket
 from datetime import datetime, timezone
+from urllib.parse import urlparse
 
 import requests
 from anthropic import AsyncAnthropic
@@ -101,17 +104,20 @@ class ResearchAgent:
         )
 
     async def _run_tool(self, name: str, tool_input: dict, report: dict) -> dict:
-        if name == "web_search":
-            return await asyncio.to_thread(web_search, tool_input["query"])
-        if name == "fetch_page":
-            result = await asyncio.to_thread(fetch_page, tool_input["url"])
-            if result.get("url"):
-                report["sources"].append(result["url"])
-            return result
-        if name == "save_section":
-            save_section(report, tool_input["title"], tool_input["content"])
-            return {"saved": tool_input["title"]}
-        return {"error": f"Unknown tool: {name}"}
+        try:
+            if name == "web_search":
+                return await asyncio.to_thread(web_search, tool_input["query"])
+            if name == "fetch_page":
+                result = await asyncio.to_thread(fetch_page, tool_input["url"])
+                if result.get("url"):
+                    report["sources"].append(result["url"])
+                return result
+            if name == "save_section":
+                save_section(report, tool_input["title"], tool_input["content"])
+                return {"saved": tool_input["title"]}
+            return {"error": f"Unknown tool: {name}"}
+        except Exception as exc:
+            return {"error": str(exc)}
 
     def _event(self, payload: dict) -> str:
         payload.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
@@ -130,6 +136,7 @@ def web_search(query: str) -> dict:
 
 
 def fetch_page(url: str) -> dict:
+    validate_public_url(url)
     response = requests.get(url, timeout=10, headers={"User-Agent": "DocSenseResearchAgent/1.0"})
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
@@ -137,6 +144,34 @@ def fetch_page(url: str) -> dict:
         tag.decompose()
     text = " ".join(soup.get_text(" ").split())
     return {"url": url, "text": text[:2000]}
+
+
+def validate_public_url(url: str) -> None:
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"}:
+        raise ValueError("Only HTTP and HTTPS URLs can be fetched")
+    if not parsed.hostname:
+        raise ValueError("URL must include a hostname")
+
+    try:
+        addresses = socket.getaddrinfo(parsed.hostname, parsed.port or 443, type=socket.SOCK_STREAM)
+    except socket.gaierror as exc:
+        raise ValueError("Could not resolve URL hostname") from exc
+
+    for address in addresses:
+        host = address[4][0]
+        ip = ipaddress.ip_address(host)
+        if any(
+            [
+                ip.is_private,
+                ip.is_loopback,
+                ip.is_link_local,
+                ip.is_multicast,
+                ip.is_reserved,
+                ip.is_unspecified,
+            ]
+        ):
+            raise ValueError("URL resolves to a non-public network address")
 
 
 def save_section(report: dict, title: str, content: str) -> None:
